@@ -120,7 +120,7 @@ function load_style_for_widget(){
 }
 
 function get_rem_catname($catid){
-        $caturl = 'http://ganeshveer.tk/wp-json/wp/v2/categories/'.$catid;
+        $caturl = 'http://xxxx.xx/wp-json/wp/v2/categories/'.$catid;
         $response =  wp_remote_get( $caturl );
         $cats = json_decode( wp_remote_retrieve_body( $response ) );
         return $cats->name;
