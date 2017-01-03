@@ -85,7 +85,7 @@ class Remote_Posts_List_Widget extends WP_Widget {
                              echo '<li><a href="' . $post->link. '">' . $post->title->rendered . '</a><br/><span class="list_cats"> Posted In:';
                                foreach($post->categories as $category){
                                     //echo $category;  // this holds category id
-                                    echo get_rem_catname($category).' ';                                    
+                                    echo get_rem_catname($category, $instance['jsonurl']).' ';                                    
                                } 
                              echo '</span> <span class="list_meta"> Posted On: ' . substr($post->date, 0, strpos($post->date, "T")) . '</span> </li>';
                              
@@ -118,9 +118,9 @@ function load_style_for_widget(){
 </style>
     <?php
 }
-
-function get_rem_catname($catid){
-        $caturl = 'http://xxxx.xx/wp-json/wp/v2/categories/'.$catid;
+function get_remote_catname($catid, $jsonurl){
+          $caturl = str_replace("posts","categories", $jsonurl);        
+          $caturl .= $catid;
         $response =  wp_remote_get( $caturl );
         $cats = json_decode( wp_remote_retrieve_body( $response ) );
         return $cats->name;
