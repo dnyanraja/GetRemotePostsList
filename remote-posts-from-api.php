@@ -21,11 +21,11 @@ class Remote_Posts_List_Widget extends WP_Widget {
 	}
 
 	public function form( $instance ) {
-        $title = ( !empty( $instance['title'] ) ) ? $instance['title'] : '';
-        $jsonurl    = esc_attr( $instance['jsonurl'] );
-        $postlimit    = esc_attr( $instance['postlimit'] );
-        ?>
 
+        $title      = ( !empty( $instance['title'] ) ) ? $instance['title'] : '';
+        $jsonurl    = esc_attr( $instance['jsonurl'] );
+        $postlimit  = esc_attr( $instance['postlimit'] );
+        ?>
         <p>
             <label for="<?php echo $this->get_field_name( 'title' ); ?>">Title: </label>
             <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
@@ -41,6 +41,7 @@ class Remote_Posts_List_Widget extends WP_Widget {
 
         <?php
 	}
+
     // Updating widget replacing old instances with new
     public function update( $new_instance, $old_instance ) {
         
@@ -75,13 +76,18 @@ class Remote_Posts_List_Widget extends WP_Widget {
                         echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base ) . $args['after_title'];
                     }
 
-
                     if( !empty( $posts ) ) {
-                        echo '<ul>';
+                        echo '<ul id="linkslist">';
                         $count = 0;
                         foreach( $posts as $post ) {                            
-                             
-                             echo '<li><a href="' . $post->link. '">' . $post->title->rendered . '</a> <span> Posted On T: ' . $post->date. '</span></li>';
+                            
+
+                             echo '<li><a href="' . $post->link. '">' . $post->title->rendered . '</a><br/><span class="list_cats"> Posted In:';
+                               foreach($post->categories as $category){
+                                    //echo $category;  // this holds category id
+                                    echo get_rem_catname($category).' ';                                    
+                               } 
+                             echo '</span> <span class="list_meta"> Posted On: ' . substr($post->date, 0, strpos($post->date, "T")) . '</span> </li>';
                              
                              $count++;
                              if($count < $instance['postlimit'])
@@ -93,11 +99,30 @@ class Remote_Posts_List_Widget extends WP_Widget {
                     }
 
                     echo $args['after_widget'];
-	}
+    	}
 
 }
 
-add_action( 'widgets_init', function(){register_widget( 'Remote_Posts_List_Widget' ); });
+add_action( 'widgets_init', function(){
+    register_widget( 'Remote_Posts_List_Widget' ); 
+    add_action('wp_head','load_style_for_widget');
+});
 
+function load_style_for_widget(){
+    ?>
+<style>
+#remote-wp-posts-rest-api-3, #linkslist{list-style-type:none;margin-left:0px;padding-left:0px;}
+#linkslist li{list-style-type:none;background: #E1E1E1;padding: 10px;margin: 4px auto;border-radius: 6px;margin-left: 0;}
+#linkslist li .list_meta{font-size:11px;font-style:italic;color:#333;}
+#linkslist li .list_cats{font-size:11px;font-style:italic;color:#333;}
+</style>
+    <?php
+}
 
+function get_rem_catname($catid){
+        $caturl = 'http://ganeshveer.tk/wp-json/wp/v2/categories/'.$catid;
+        $response =  wp_remote_get( $caturl );
+        $cats = json_decode( wp_remote_retrieve_body( $response ) );
+        return $cats->name;
+   }
 ?>
