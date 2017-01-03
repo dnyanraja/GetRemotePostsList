@@ -1,6 +1,6 @@
 <?php /**
  * Plugin Name: Get remote posts list
- * Plugin URI: http://webandseoguide.tk
+ * Plugin URI: http://ganeshveer.tk
  * Description: Get Recent Posts from Remote Wp site using Rest api
  * Version: 1.0.0
  * Author: Ganesh Veer
