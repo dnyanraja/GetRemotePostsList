@@ -1,4 +1,4 @@
-# -Getremotepostslist
+# Get remote posts list
 
 -This is wordpress plugin to Get Recent Posts from Remote Wp site using Rest api
 
