@@ -1,7 +1,7 @@
 <?php /**
  * Plugin Name: Get remote posts list
  * Plugin URI: http://ganeshveer.tk
- * Description: Get Recent Posts from Remote Wordpress site using Rest API
+ * Description: Get Recent Posts List from Remote Wordpress website using Rest API
  * Version: 1.0.0
  * Author: Ganesh Veer
  * Author URI: 
