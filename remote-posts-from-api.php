@@ -7,21 +7,15 @@
  * Author URI: 
  * License: GPL2
  **/
-
 class Remote_Posts_List_Widget extends WP_Widget {
-
-	public function __construct() {
-		$widget_details = array(
-			'classname' => 'remote-wp-posts-rest-api',
-			'description' => 'Retrieve the list of Recent Posts from Remote Wp site using Rest api'
-		);
-
-		parent::__construct( 'remote-wp-posts-rest-api', 'Get Posts from Api', $widget_details );
-
-	}
-
-	public function form( $instance ) {
-
+    public function __construct() {
+        $widget_details = array(
+            'classname' => 'remote-wp-posts-rest-api',
+            'description' => 'Retrieve the list of Recent Posts from Remote Wp site using Rest api'
+        );
+        parent::__construct( 'remote-wp-posts-rest-api', 'Get Posts from Api', $widget_details );
+    }
+    public function form( $instance ) {
         $title      = ( !empty( $instance['title'] ) ) ?  strip_tags($instance['title']) : '';
         $jsonurl    =  esc_url(  $instance['jsonurl'] );
         $postlimit  = intval( $instance['postlimit'] );
@@ -40,54 +34,50 @@ class Remote_Posts_List_Widget extends WP_Widget {
         </p>
 
         <?php
-	}
-
+    }
     // Updating widget replacing old instances with new
     public function update( $new_instance, $old_instance ) {
         
         $instance = array();
-
         $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
         $instance['jsonurl'] = $new_instance['jsonurl'];
         $instance['postlimit'] = $new_instance['postlimit'];
         
         return $instance;
     }
-
-	public function widget( $args, $instance ) {
-
+    public function widget( $args, $instance ) {
                  $response = wp_remote_get($instance['jsonurl']);
          
                   /*if(is_wp_error($response)) {
                         echo 'Error Response';
                        // return;
                     }*/
-
                     $posts = json_decode( wp_remote_retrieve_body( $response ) );
-
                     if( empty( $posts ) ) {
                         echo 'error post empty';
                         return;
                     }
-
                     echo $args['before_widget'];
-
                     if( !empty( $instance['title'] ) ) {
                         echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base ) . $args['after_title'];
                     }
-
                     if( !empty( $posts ) ) {
                         echo '<ul id="linkslist">';
                         $count = 0;
                         foreach( $posts as $post ) {                            
                             
-
-                             echo '<li><a href="' . $post->link. '">' . $post->title->rendered . '</a><br/><span class="list_cats"> Posted In:';
+                             echo '<li><a href="' . $post->link. '">' . $post->title->rendered . '</a><br/><strong class="list_cats"> Posted In: </strong><span>';
+                            
+                            $lastElement = end($post->categories);
                                foreach($post->categories as $category){
                                     //echo $category;  // this holds category id
-                                    echo rplw_get_rem_catname($category, $instance['jsonurl']).' ';                                    
+                                    echo rplw_get_remote_catname($category, $instance['jsonurl']);
+                                    if($category != $lastElement ) {
+                                     echo ", ";
+                                    }
                                } 
-                             echo '</span> <span class="list_meta"> Posted On: ' . substr($post->date, 0, strpos($post->date, "T")) . '</span> </li>';
+                            
+                             echo '</span><br/><strong class="list_meta"> Posted On: </strong><span> ' . substr($post->date, 0, strpos($post->date, "T")) . '</span> </li>';
                              
                              $count++;
                              if($count < $instance['postlimit'])
@@ -97,32 +87,28 @@ class Remote_Posts_List_Widget extends WP_Widget {
                         }
                     echo '</ul>';
                     }
-
                     echo $args['after_widget'];
-    	}
-
+        }
 }
-
 add_action( 'widgets_init', function(){
     register_widget( 'Remote_Posts_List_Widget' ); 
     add_action('wp_head','rplw_load_style_for_widget');
 });
-
 function rplw_load_style_for_widget(){
     ?>
 <style>
 #remote-wp-posts-rest-api-3, #linkslist{list-style-type:none;margin-left:0px;padding-left:0px;}
 #linkslist li{list-style-type:none;background: #E1E1E1;padding: 10px;margin: 4px auto;border-radius: 6px;margin-left: 0;}
-#linkslist li .list_meta{font-size:11px;font-style:italic;color:#333;}
-#linkslist li .list_cats{font-size:11px;font-style:italic;color:#333;}
+#linkslist li .list_meta{font-size:11px;color:#333;}
+#linkslist li .list_cats{font-size:11px;color:#333;}
 </style>
     <?php
 }
 function rplw_get_remote_catname($catid, $jsonurl){
-          $caturl = str_replace("posts","categories", $jsonurl);        
-          $caturl .= $catid;
+          $caturl = str_replace("posts", "categories", $jsonurl);        
+          $caturl .= '/'.$catid;
         $response =  wp_remote_get( $caturl );
         $cats = json_decode( wp_remote_retrieve_body( $response ) );
+        
         return $cats->name;
    }
-?>
