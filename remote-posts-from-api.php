@@ -85,7 +85,7 @@ class Remote_Posts_List_Widget extends WP_Widget {
                              echo '<li><a href="' . $post->link. '">' . $post->title->rendered . '</a><br/><span class="list_cats"> Posted In:';
                                foreach($post->categories as $category){
                                     //echo $category;  // this holds category id
-                                    echo get_rem_catname($category, $instance['jsonurl']).' ';                                    
+                                    echo rplw_get_rem_catname($category, $instance['jsonurl']).' ';                                    
                                } 
                              echo '</span> <span class="list_meta"> Posted On: ' . substr($post->date, 0, strpos($post->date, "T")) . '</span> </li>';
                              
