@@ -105,10 +105,10 @@ class Remote_Posts_List_Widget extends WP_Widget {
 
 add_action( 'widgets_init', function(){
     register_widget( 'Remote_Posts_List_Widget' ); 
-    add_action('wp_head','load_style_for_widget');
+    add_action('wp_head','rplw_load_style_for_widget');
 });
 
-function load_style_for_widget(){
+function rplw_load_style_for_widget(){
     ?>
 <style>
 #remote-wp-posts-rest-api-3, #linkslist{list-style-type:none;margin-left:0px;padding-left:0px;}
@@ -118,7 +118,7 @@ function load_style_for_widget(){
 </style>
     <?php
 }
-function get_remote_catname($catid, $jsonurl){
+function rplw_get_remote_catname($catid, $jsonurl){
           $caturl = str_replace("posts","categories", $jsonurl);        
           $caturl .= $catid;
         $response =  wp_remote_get( $caturl );
