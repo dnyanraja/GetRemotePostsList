@@ -1,9 +1,11 @@
 # Get remote posts list
 
--This is wordpress plugin to Get Recent Posts from Remote Wp site using Rest api
+- This is wordpress plugin to Get Recent Posts from Remote Wp site using Rest api
 
--This plugin create a widget, which accepts two parameter, Json URL and post limit(number of posts to display).
+- This plugin create a widget "Get Posts from Api" after installation,
 
--You can put the rest url of the remote wp site to get the posts, and put "wp-json/wp/v2/posts/" after site url.
+- This widget accepts two parameter, Json URL and post limit(number of posts to display).
 
--You can limit the number of posts you want to retrive.
+- Json url should look like http://yoursite.com/wp-json/wp/v2/posts/
+
+- You can limit the number of posts you want to retrive from remote site by setting post limit.
