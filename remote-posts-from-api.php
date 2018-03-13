@@ -22,9 +22,9 @@ class Remote_Posts_List_Widget extends WP_Widget {
 
 	public function form( $instance ) {
 
-        $title      = ( !empty( $instance['title'] ) ) ? $instance['title'] : '';
-        $jsonurl    = esc_attr( $instance['jsonurl'] );
-        $postlimit  = esc_attr( $instance['postlimit'] );
+        $title      = ( !empty( $instance['title'] ) ) ?  strip_tags($instance['title']) : '';
+        $jsonurl    =  esc_url(  $instance['jsonurl'] );
+        $postlimit  = intval( $instance['postlimit'] );
         ?>
         <p>
             <label for="<?php echo $this->get_field_name( 'title' ); ?>">Title: </label>
