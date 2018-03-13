@@ -39,9 +39,10 @@ class Remote_Posts_List_Widget extends WP_Widget {
     public function update( $new_instance, $old_instance ) {
         
         $instance = array();
-        $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
-        $instance['jsonurl'] = $new_instance['jsonurl'];
-        $instance['postlimit'] = $new_instance['postlimit'];
+               $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+        $instance['jsonurl'] = esc_url( $new_instance['jsonurl']);
+        $instance['postlimit'] = intval( $new_instance['postlimit']);
+
         
         return $instance;
     }
