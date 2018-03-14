@@ -1,6 +1,6 @@
 === Get remote posts list ===
 Contributors: dnyanraja, Ganesh Veer
-Donate link: http://example.com/
+Donate link: http://ganeshveer.tk
 Tags: comments, spam
 Requires at least: 3.0
 Tested up to: 4.7
